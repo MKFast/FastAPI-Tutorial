@@ -4,9 +4,10 @@ from sqlalchemy.orm import relationship
 from .database import Base
 
 
-class Item(Base):
-    __tablename__ = "items"
+class User(Base):
+    __tablename__ = "users"
 
-    id = Column(Integer, primary_key=True, index=True)
-    title = Column(String, index=True)
-    description = Column(String, index=True)
+    id = Column(Integer, primary_key=True)
+    username = Column(String, unique=True)
+    hashed_password = Column(String)
+    is_active = Column(Boolean,default=True)
