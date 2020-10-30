@@ -17,3 +17,4 @@ class UserInDB(User):
 
 class UserCreate(User):
     password: str
+    email: str
