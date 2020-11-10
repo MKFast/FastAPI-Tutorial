@@ -12,7 +12,7 @@ class TokenData(BaseModel):
 class User(BaseModel):
     username: str
 
-class UserInDB(User):
+class UserInDB(User): 
     hashed_password: str
 
 class UserCreate(User):
