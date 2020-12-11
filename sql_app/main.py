@@ -1,5 +1,5 @@
 from typing import List
-from fastapi import Depends, FastAPI, HTTPException, status
+from fastapi import Depends, FastAPI, HTTPException, status,File, UploadFile
 from fastapi import Depends, FastAPI, HTTPException
 from sqlalchemy.orm import Session
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
@@ -7,6 +7,7 @@ from . import crud, models, schemas
 from .database import SessionLocal, engine
 from jose import JWTError, jwt
 from datetime import datetime, timedelta
+import shutil
 
 models.Base.metadata.create_all(bind=engine)
 
@@ -71,10 +72,16 @@ def create_user(
 
 @app.post("/posts/")
 def create_post(
-    title:str,body:str, db: Session = Depends(get_db),current_user: models.User = Depends(get_current_user)
+    title:str,body:str,file: UploadFile = File(...), db: Session = Depends(get_db),current_user: models.User = Depends(get_current_user)
 ):
     user_id=current_user.id
-    return crud.create_post(db=db,user_id=user_id,title=title,body=body)
+
+    with open("media/"+file.filename, "wb") as image:
+        shutil.copyfileobj(file.file, image)
+
+    url = str("media/"+file.filename)
+
+    return crud.create_post(db=db,user_id=user_id,title=title,body=body,url=url)
 
 @app.get("/posts/")
 def post_list(db: Session = Depends(get_db)):
