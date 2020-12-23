@@ -13,7 +13,6 @@ models.Base.metadata.create_all(bind=engine)
 
 app = FastAPI()
 
-
 # Dependency
 def get_db():
     db = SessionLocal()
@@ -70,7 +69,7 @@ def create_user(
 ):
     return crud.create_user(db=db, user=user)
 
-@app.post("/posts/")
+@app.post("/posts/",status_code=status.HTTP_201_CREATED)
 def create_post(
     title:str,body:str,file: UploadFile = File(...), db: Session = Depends(get_db),current_user: models.User = Depends(get_current_user)
 ):
