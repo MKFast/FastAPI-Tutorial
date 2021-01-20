@@ -75,8 +75,8 @@ def get_post(db, id: int):
 def post_list(db):
     return db.query(models.Post).all()
 
-def create_comment(db: Session,post_id:int,name:str,body:str,email:str):
-    db_comment = models.Comment(name=name,post_id=post_id,body=body,email=email)
+def create_comment(db: Session,post_id:int,comment:schemas.CommentBase):
+    db_comment = models.Comment(post_id=post_id,**comment.dict())
     db.add(db_comment)
     db.commit()
     db.refresh(db_comment)

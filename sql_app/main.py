@@ -86,11 +86,11 @@ def create_post(
 def post_list(db: Session = Depends(get_db)):
     return crud.post_list(db=db)
 
-@app.post("/posts/{post_id}/comment")
+@app.post("/posts/{post_id}/comment",response_model=schemas.CommentList)
 def create_comment(
-        name:str,body:str,email:str,post_id:int,db:Session = Depends(get_db)
+        comment:schemas.CommentBase ,post_id:int,db:Session = Depends(get_db)
 ):
-    return  crud.create_comment(db=db,post_id=post_id,name=name,body=body,email=email)
+    return  crud.create_comment(db=db,post_id=post_id,comment=comment)
 
 @app.get("/posts/{post_id}")
 def post_detail(post_id:int,db: Session = Depends(get_db)):
