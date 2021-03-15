@@ -7,6 +7,8 @@ from . import crud, models, schemas
 from .database import SessionLocal, engine
 from jose import JWTError, jwt
 from datetime import datetime, timedelta
+import  cloudinary
+import cloudinary.uploader
 import shutil
 
 models.Base.metadata.create_all(bind=engine)
@@ -75,10 +77,8 @@ def create_post(
 ):
     user_id=current_user.id
 
-    with open("media/"+file.filename, "wb") as image:
-        shutil.copyfileobj(file.file, image)
-
-    url = str("media/"+file.filename)
+    result = cloudinary.uploader.upload(file.file)
+    url = result.get("url")
 
     return crud.create_post(db=db,user_id=user_id,title=title,body=body,url=url)
 
